@@ -1,253 +1,249 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análise Táctica Avançada: O Retorno de Harry</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <title>Emerald Groove - Rhythm Game</title>
     <style>
+        :root {
+            --hair: #e65c00;
+            --skin: #ffe0bd;
+            --eyes: #2ecc71;
+            --dress: #27ae60;
+            --bg: #1a1a2e;
+        }
+
         body {
-            background-color: #020617;
-            color: #f1f5f9;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
-        .bg-cyber {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-        }
-        .chart-container {
+
+        #game-container {
             position: relative;
+            width: 400px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Character Styling */
+        #character {
+            width: 200px;
+            height: 300px;
+            margin-top: 50px;
+            transition: transform 0.1s;
+            transform-origin: bottom center;
+        }
+
+        .hair { fill: var(--hair); }
+        .skin { fill: var(--skin); }
+        .eyes { fill: var(--eyes); }
+        .dress { fill: var(--dress); }
+
+        /* UI Styling */
+        #score-board {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #2ecc71;
+        }
+
+        #combo-text {
+            position: absolute;
+            top: 100px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #f1c40f;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .animate-combo {
+            animation: pop 0.5s ease-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* Controls / Indicators */
+        #beat-indicator {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--eyes);
+            border-radius: 50%;
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #beat-pulse {
             width: 100%;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 400px;
-            max-height: 500px;
+            height: 100%;
+            background: var(--eyes);
+            border-radius: 50%;
+            opacity: 0.3;
+            transform: scale(0.1);
         }
-        .neon-glow-red { box-shadow: 0 0 20px rgba(225, 29, 72, 0.4); border: 1px solid #e11d48; }
-        .neon-glow-purple { box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); border: 1px solid #a855f7; }
-        .neon-glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.4); border: 1px solid #06b6d4; }
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
+
+        .pulse-active {
+            animation: pulse-kf 1s infinite linear;
         }
+
+        @keyframes pulse-kf {
+            0% { transform: scale(0.1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 0.2; }
+            100% { transform: scale(0.1); opacity: 0.8; }
+        }
+
+        .instructions {
+            margin-top: 20px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* Dance Poses */
+        .pose-left { transform: rotate(-15deg) translateX(-20px) scaleY(0.95); }
+        .pose-right { transform: rotate(15deg) translateX(20px) scaleY(0.95); }
+        .pose-up { transform: translateY(-30px) scaleX(0.9); }
+        .pose-down { transform: translateY(10px) scaleY(0.8) scaleX(1.1); }
+
     </style>
 </head>
-<body class="p-4 md:p-10 bg-cyber">
+<body>
 
-    <div class="max-w-7xl mx-auto">
-        <header class="mb-16 border-b border-slate-700 pb-8 relative">
-            <div class="absolute -top-4 -left-4 w-24 h-24 bg-red-600 opacity-20 blur-3xl"></div>
-            <h1 class="text-5xl md:text-7xl font-black mb-4 italic tracking-tighter">SHINJUKU: <span class="text-red-500">MOU II!</span></h1>
-            <p class="text-xl text-slate-400 font-light">Análise balística do contra-ataque de Harry e o colapso das realidades infinitas.</p>
-        </header>
+    <div id="score-board">Score: <span id="score">0</span></div>
+    
+    <div id="game-container">
+        <div id="combo-text">PERFECT!</div>
 
-        <section class="mb-20">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h2 class="text-3xl font-bold mb-6 text-cyan-400">1. O Impacto de Queda: Kokusen Vertical</h2>
-                    <p class="text-slate-300 leading-relaxed mb-6">
-                        Ao romper a barreira de Kirky por fora com um **Kokusen Fluido**, Harry utilizou a energia potencial da queda livre para amplificar o seu soco. O impacto na cabeça de Sukuna não foi apenas físico; a propriedade fluida da sua energia permitiu que o Kokusen ignorasse a resistência externa da pele amaldiçoada, focando 100% do impacto no sistema nervoso central do alvo.
-                    </p>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg border-l-4 border-cyan-500">
-                            <span>Velocidade de Impacto</span>
-                            <span class="font-mono text-cyan-400">Mach 1.2 (Gravidade Amaldiçoada)</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg border-l-4 border-red-500">
-                            <span>Multiplicador de Kokusen</span>
-                            <span class="font-mono text-red-400">Potência Elevada a 2.5</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="glass-card p-6 bg-slate-900/40 rounded-2xl neon-glow-cyan">
-                    <h3 class="text-center mb-4 font-bold">Distribuição de Força no Impacto "Caindo de Cabeça"</h3>
-                    <div class="chart-container">
-                        <canvas id="impactPhysicsChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <!-- SVG Character -->
+        <svg id="character" viewBox="0 0 100 150">
+            <!-- Legs -->
+            <rect x="35" y="110" width="10" height="30" class="skin" />
+            <rect x="55" y="110" width="10" height="30" class="skin" />
+            <!-- Shoes -->
+            <rect x="30" y="135" width="15" height="5" fill="#333" />
+            <rect x="55" y="135" width="15" height="5" fill="#333" />
+            <!-- Dress -->
+            <path d="M30 60 L70 60 L85 110 L15 110 Z" class="dress" />
+            <!-- Arms -->
+            <rect id="armL" x="15" y="65" width="8" height="30" class="skin" rx="4" />
+            <rect id="armR" x="77" y="65" width="8" height="30" class="skin" rx="4" />
+            <!-- Neck -->
+            <rect x="45" y="55" width="10" height="10" class="skin" />
+            <!-- Face -->
+            <circle cx="50" cy="40" r="22" class="skin" />
+            <!-- Eyes -->
+            <circle cx="42" cy="38" r="3" class="eyes" />
+            <circle cx="58" cy="38" r="3" class="eyes" />
+            <!-- Mouth -->
+            <path d="M45 48 Q50 52 55 48" fill="none" stroke="#e74c3c" stroke-width="1.5" />
+            <!-- Hair -->
+            <path d="M25 40 Q25 10 50 5 Q75 10 75 40 L80 65 Q50 55 20 65 Z" class="hair" />
+            <path d="M35 25 Q50 15 65 25" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1" />
+        </svg>
 
-        <section class="mb-20">
-            <div class="mb-10 text-center">
-                <h2 class="text-4xl font-extrabold text-purple-400">2. Decomposição da Árvore da Vida</h2>
-                <p class="text-slate-400 mt-2">Após salvar Fuyuko, Harry sacrificou a sua reserva estratégica para libertar um arsenal múltiplo.</p>
-            </div>
+        <div id="beat-indicator">
+            <div id="beat-pulse" class="pulse-active"></div>
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                <div class="p-6 bg-slate-900/80 rounded-xl border border-slate-700 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-2 opacity-10 text-6xl">🩸</div>
-                    <h4 class="text-red-500 font-bold text-xl mb-3">Manipulação de Sangue</h4>
-                    <p class="text-sm text-slate-400">Uso do "Sangen" (Piercing Blood) disparado de distâncias extremas, perfurando a floresta em velocidade superluminal.</p>
-                    <div class="mt-4 h-1 w-full bg-red-900 rounded"><div class="h-full bg-red-500 w-full animate-pulse"></div></div>
-                </div>
-                <div class="p-6 bg-slate-900/80 rounded-xl border border-slate-700 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-2 opacity-10 text-6xl">👁️</div>
-                    <h4 class="text-cyan-500 font-bold text-xl mb-3">Os Doze Olhos</h4>
-                    <p class="text-sm text-slate-400">Análise de realidade e previsão de linhas temporais, permitindo a coordenação com a Fuyuko.</p>
-                    <div class="mt-4 h-1 w-full bg-cyan-900 rounded"><div class="h-full bg-cyan-500 w-3/4"></div></div>
-                </div>
-                <div class="p-6 bg-slate-900/80 rounded-xl border border-slate-700 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-2 opacity-10 text-6xl">💍</div>
-                    <h4 class="text-purple-500 font-bold text-xl mb-3">Anel de Rika</h4>
-                    <p class="text-sm text-slate-400">Invocação parcial de armazenamento de energia amaldiçoada e ferramentas externas.</p>
-                    <div class="mt-4 h-1 w-full bg-purple-900 rounded"><div class="h-full bg-purple-500 w-1/2"></div></div>
-                </div>
-            </div>
-
-            <div class="glass-card p-8 bg-slate-900/40 rounded-2xl neon-glow-purple">
-                <h3 class="text-center text-xl font-bold mb-6">Frequência de Ataques Superluminais (Piercing Blood x5)</h3>
-                <div class="chart-container" id="speedAtaquePlot"></div>
-            </div>
-        </section>
-
-        <section class="mb-20">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="p-8 bg-black/40 rounded-3xl border-2 border-dashed border-pink-500/50">
-                    <h2 class="text-3xl font-black text-pink-500 mb-6 italic">DOMÍNIO: PÔR DO SOL ROMÂNTICO</h2>
-                    <p class="text-slate-300 mb-6">
-                        A Expansão de Domínio de Fuyuko, **"Mugen no Genjitsu no Aida no Romanchikku na Yūhi"**, materializa a ideia de infinitas realidades. O alvo é forçado a processar o seu próprio movimento em biliões de linhas temporais simultâneas. 
-                    </p>
-                    <div class="space-y-4">
-                        <div class="flex items-start gap-4">
-                            <div class="bg-pink-500 text-black font-bold p-1 px-3 rounded">EFEITO 1</div>
-                            <p class="text-sm">Desnorteamento Cognitivo: O cérebro do alvo tenta controlar corpos que não existem na realidade base.</p>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="bg-pink-500 text-black font-bold p-1 px-3 rounded">EFEITO 2</div>
-                            <p class="text-sm">Paralisia de Locomoção: Cada passo requer o cálculo de infinitos pontos de apoio.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col justify-center">
-                    <h3 class="text-2xl font-bold mb-4 text-emerald-400">Eficiência de Harry: Energia Fluida</h3>
-                    <p class="text-slate-400 mb-6">A energia de Harry flui sem atrito, permitindo-lhe realizar o Kokusen com 42% mais facilidade que um feiticeiro comum sob stress extremo.</p>
-                    <div class="chart-container">
-                        <canvas id="fluidezChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <footer class="text-center py-10 border-t border-slate-800">
-            <p class="text-slate-500 text-sm uppercase tracking-widest">Relatório Final - Incidente Shinjuku - Protocolo de Batalha: Harry & Fuyuko</p>
-        </footer>
+        <div class="instructions">Use ARROW KEYS to Dance to the Beat!</div>
     </div>
 
     <script>
-        const wrapLabel = (label) => {
-            if (label.length <= 16) return label;
-            const words = label.split(' ');
-            let lines = [];
-            let currentLine = '';
-            words.forEach(word => {
-                if ((currentLine + word).length > 16) {
-                    if (currentLine) lines.push(currentLine.trim());
-                    currentLine = word + ' ';
-                } else {
-                    currentLine += word + ' ';
-                }
-            });
-            if (currentLine) lines.push(currentLine.trim());
-            return lines;
-        };
+        let score = 0;
+        const scoreEl = document.getElementById('score');
+        const character = document.getElementById('character');
+        const comboText = document.getElementById('combo-text');
+        const pulse = document.getElementById('beat-pulse');
 
-        const ttConfig = {
-            callbacks: {
-                title: function(items) {
-                    let label = items[0].chart.data.labels[items[0].dataIndex];
-                    return Array.isArray(label) ? label.join(' ') : label;
-                }
-            }
-        };
+        // Logic to track the "Perfect" window
+        // The pulse animation is 1s long. We consider "Perfect" to be near the peak (0.5s)
+        function getPulseScale() {
+            const style = window.getComputedStyle(pulse);
+            const matrix = new WebKitCSSMatrix(style.transform);
+            return matrix.a; // Returns the scale value
+        }
 
-        const ctxImpact = document.getElementById('impactPhysicsChart').getContext('2d');
-        new Chart(ctxImpact, {
-            type: 'polarArea',
-            data: {
-                labels: [wrapLabel("Impacto do Soco"), wrapLabel("Energia da Queda"), wrapLabel("Amplificação Kokusen"), wrapLabel("Propriedade Fluida")],
-                datasets: [{
-                    data: [100, 150, 300, 200],
-                    backgroundColor: ['rgba(6, 182, 212, 0.5)', 'rgba(59, 130, 246, 0.5)', 'rgba(225, 29, 72, 0.5)', 'rgba(168, 85, 247, 0.5)'],
-                    borderColor: '#fff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: '#94a3b8' } },
-                    tooltip: ttConfig
-                },
-                scales: { r: { ticks: { display: false }, grid: { color: '#334155' } } }
+        window.addEventListener('keydown', (e) => {
+            let poseClass = '';
+            
+            switch(e.key) {
+                case 'ArrowLeft': poseClass = 'pose-left'; break;
+                case 'ArrowRight': poseClass = 'pose-right'; break;
+                case 'ArrowUp': poseClass = 'pose-up'; break;
+                case 'ArrowDown': poseClass = 'pose-down'; break;
+                default: return;
             }
+
+            // Visual feedback for dance
+            character.classList.remove('pose-left', 'pose-right', 'pose-up', 'pose-down');
+            void character.offsetWidth; // Trigger reflow
+            character.classList.add(poseClass);
+
+            // Scoring Logic
+            const scale = getPulseScale();
+            // Scale peaks around 1.2. We reward hits between 1.0 and 1.2
+            if (scale > 0.9) {
+                score += 100;
+                showCombo("PERFECT!");
+            } else {
+                score += 10;
+            }
+            
+            scoreEl.innerText = score;
+
+            // Reset pose after a short delay
+            setTimeout(() => {
+                character.classList.remove(poseClass);
+            }, 150);
         });
 
-        const trace1 = {
-            x: [0.1, 0.12, 0.14, 0.16, 0.18],
-            y: [10, 10, 10, 10, 10],
-            name: 'Piercing Blood (Luz)',
-            mode: 'markers',
-            marker: { color: '#e11d48', size: 15, symbol: 'star' }
-        };
-        const trace2 = {
-            x: [0.25],
-            y: [8],
-            name: 'Karihara (Velocidade Luz)',
-            mode: 'markers',
-            marker: { color: '#a855f7', size: 20, symbol: 'diamond' }
-        };
-        
-        Plotly.newPlot('speedAtaquePlot', [trace1, trace2], {
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            xaxis: { title: 'Tempo (Nanosegundos)', color: '#94a3b8', gridcolor: '#334155' },
-            yaxis: { title: 'Intensidade de CE', color: '#94a3b8', gridcolor: '#334155' },
-            margin: { t: 20, b: 40, l: 50, r: 20 },
-            showlegend: true,
-            legend: { font: { color: '#94a3b8' } }
-        }, {responsive: true});
+        function showCombo(text) {
+            comboText.innerText = text;
+            comboText.classList.remove('animate-combo');
+            void comboText.offsetWidth;
+            comboText.classList.add('animate-combo');
+        }
 
-        const ctxFluidez = document.getElementById('fluidezChart').getContext('2d');
-        new Chart(ctxFluidez, {
-            type: 'radar',
-            data: {
-                labels: [wrapLabel("Facilidade Kokusen"), wrapLabel("Consumo RCT"), wrapLabel("Velocidade Reacção"), wrapLabel("Stamina")],
-                datasets: [{
-                    label: 'Harry (Energia Fluida)',
-                    data: [95, 20, 90, 85],
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.2)'
-                }, {
-                    label: 'Feiticeiro Standard',
-                    data: [40, 70, 60, 50],
-                    borderColor: '#64748b',
-                    backgroundColor: 'rgba(100, 116, 139, 0.2)'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: { color: '#334155' },
-                        grid: { color: '#334155' },
-                        pointLabels: { color: '#94a3b8' },
-                        ticks: { display: false }
-                    }
-                },
-                plugins: {
-                    legend: { labels: { color: '#94a3b8' } },
-                    tooltip: ttConfig
-                }
-            }
+        // Optional: Simple synthesizer sound on beat (click browser to enable audio context)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playBeatSound() {
+            if (audioCtx.state === 'suspended') return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 150;
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        // Sync sound with animation loop roughly
+        setInterval(() => {
+            // playBeatSound(); // Uncomment this line if you want a kick-drum sound (requires user interaction first)
+        }, 1000);
+
+        // Resume audio context on first click
+        document.body.addEventListener('click', () => {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
         });
+
     </script>
 </body>
 </html>
