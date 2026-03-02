@@ -1,249 +1,244 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emerald Groove - Rhythm Game</title>
+    <title>Emerald Idol: Ultra Detail Edition</title>
     <style>
         :root {
-            --hair: #e65c00;
-            --skin: #ffe0bd;
-            --eyes: #2ecc71;
-            --dress: #27ae60;
-            --bg: #1a1a2e;
+            --hair-1: #ff4500; --hair-2: #d32f2f; --hair-3: #ff8a50;
+            --eye-1: #00ff88; --eye-2: #004d40;
+            --skin-1: #fff1e0; --skin-2: #f7d7bc;
+            --dress-1: #1b5e20; --dress-2: #4caf50;
+            --stage-glow: rgba(0, 255, 136, 0.2);
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background: var(--bg);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            margin: 0; overflow: hidden;
+            background: #050510;
+            display: flex; align-items: center; justify-content: center;
+            height: 100vh; font-family: 'Segoe UI', sans-serif;
         }
 
-        #game-container {
-            position: relative;
-            width: 400px;
-            height: 600px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        /* --- STAGE EFFECTS --- */
+        #stage {
+            position: relative; width: 600px; height: 800px;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        /* Character Styling */
-        #character {
-            width: 200px;
-            height: 300px;
-            margin-top: 50px;
-            transition: transform 0.1s;
+        .floor {
+            position: absolute; bottom: 50px; width: 400px; height: 100px;
+            background: radial-gradient(ellipse, var(--stage-glow) 0%, transparent 70%);
+            border-radius: 50%; transform: scaleY(0.3); z-index: 0;
+        }
+
+        /* --- CHARACTER CONTAINER --- */
+        #character-wrapper {
+            position: relative; width: 400px; height: 600px;
+            z-index: 10; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform-origin: bottom center;
         }
 
-        .hair { fill: var(--hair); }
-        .skin { fill: var(--skin); }
-        .eyes { fill: var(--eyes); }
-        .dress { fill: var(--dress); }
-
-        /* UI Styling */
-        #score-board {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #2ecc71;
+        /* --- HAIR ANIMATIONS --- */
+        .hair-strand { animation: hairSway 3s infinite ease-in-out; transform-origin: top center; }
+        @keyframes hairSway {
+            0%, 100% { transform: rotate(-1deg); }
+            50% { transform: rotate(1.5deg); }
         }
 
-        #combo-text {
-            position: absolute;
-            top: 100px;
-            font-size: 40px;
-            font-weight: bold;
-            color: #f1c40f;
-            opacity: 0;
-            pointer-events: none;
+        /* --- EYE BLINK --- */
+        .eyelid { animation: blink 5s infinite; transform-origin: center; }
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0); }
         }
 
-        .animate-combo {
-            animation: pop 0.5s ease-out;
+        /* --- DANCE POSES --- */
+        .pose-left { transform: rotate(-5deg) translateX(-30px); }
+        .pose-right { transform: rotate(5deg) translateX(30px); }
+        .pose-up { transform: translateY(-20px) scale(1.05); }
+        .pose-down { transform: scaleY(0.9) translateY(20px); }
+
+        /* --- UI & FEEDBACK --- */
+        .score-display {
+            position: absolute; top: 20px; font-size: 32px; font-weight: 900;
+            color: white; text-shadow: 0 0 20px var(--eye-1); z-index: 100;
         }
 
-        @keyframes pop {
-            0% { transform: scale(0.5); opacity: 1; }
+        .combo-text {
+            position: absolute; top: 150px; font-size: 50px; font-weight: 900;
+            color: #fff; pointer-events: none; opacity: 0;
+        }
+
+        .animate-pop { animation: popText 0.5s ease-out forwards; }
+        @keyframes popText {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { opacity: 1; transform: scale(1.2); }
             100% { transform: scale(1.5); opacity: 0; }
         }
 
-        /* Controls / Indicators */
-        #beat-indicator {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--eyes);
-            border-radius: 50%;
-            margin-top: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+        .controls {
+            position: absolute; bottom: 20px; color: #555; font-size: 12px;
+            letter-spacing: 2px; text-transform: uppercase;
         }
-
-        #beat-pulse {
-            width: 100%;
-            height: 100%;
-            background: var(--eyes);
-            border-radius: 50%;
-            opacity: 0.3;
-            transform: scale(0.1);
-        }
-
-        .pulse-active {
-            animation: pulse-kf 1s infinite linear;
-        }
-
-        @keyframes pulse-kf {
-            0% { transform: scale(0.1); opacity: 0.8; }
-            50% { transform: scale(1.2); opacity: 0.2; }
-            100% { transform: scale(0.1); opacity: 0.8; }
-        }
-
-        .instructions {
-            margin-top: 20px;
-            color: #888;
-            font-size: 14px;
-        }
-
-        /* Dance Poses */
-        .pose-left { transform: rotate(-15deg) translateX(-20px) scaleY(0.95); }
-        .pose-right { transform: rotate(15deg) translateX(20px) scaleY(0.95); }
-        .pose-up { transform: translateY(-30px) scaleX(0.9); }
-        .pose-down { transform: translateY(10px) scaleY(0.8) scaleX(1.1); }
-
     </style>
 </head>
 <body>
 
-    <div id="score-board">Score: <span id="score">0</span></div>
-    
-    <div id="game-container">
-        <div id="combo-text">PERFECT!</div>
+    <div class="score-display">PONTOS: <span id="score-val">0</span></div>
+    <div id="combo" class="combo-text">PERFEITO!</div>
 
-        <!-- SVG Character -->
-        <svg id="character" viewBox="0 0 100 150">
-            <!-- Legs -->
-            <rect x="35" y="110" width="10" height="30" class="skin" />
-            <rect x="55" y="110" width="10" height="30" class="skin" />
-            <!-- Shoes -->
-            <rect x="30" y="135" width="15" height="5" fill="#333" />
-            <rect x="55" y="135" width="15" height="5" fill="#333" />
-            <!-- Dress -->
-            <path d="M30 60 L70 60 L85 110 L15 110 Z" class="dress" />
-            <!-- Arms -->
-            <rect id="armL" x="15" y="65" width="8" height="30" class="skin" rx="4" />
-            <rect id="armR" x="77" y="65" width="8" height="30" class="skin" rx="4" />
-            <!-- Neck -->
-            <rect x="45" y="55" width="10" height="10" class="skin" />
-            <!-- Face -->
-            <circle cx="50" cy="40" r="22" class="skin" />
-            <!-- Eyes -->
-            <circle cx="42" cy="38" r="3" class="eyes" />
-            <circle cx="58" cy="38" r="3" class="eyes" />
-            <!-- Mouth -->
-            <path d="M45 48 Q50 52 55 48" fill="none" stroke="#e74c3c" stroke-width="1.5" />
-            <!-- Hair -->
-            <path d="M25 40 Q25 10 50 5 Q75 10 75 40 L80 65 Q50 55 20 65 Z" class="hair" />
-            <path d="M35 25 Q50 15 65 25" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1" />
-        </svg>
+    <div id="stage">
+        <div class="floor"></div>
+        
+        <div id="character-wrapper">
+            <svg viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+                <!-- Definições de Sombras e Degradês -->
+                <defs>
+                    <filter id="softGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                    <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="100%">
+                        <stop offset="0%" stop-color="var(--hair-3)" />
+                        <stop offset="50%" stop-color="var(--hair-1)" />
+                        <stop offset="100%" stop-color="var(--hair-2)" />
+                    </linearGradient>
+                    <radialGradient id="eyeIris">
+                        <stop offset="0%" stop-color="#fff" />
+                        <stop offset="40%" stop-color="var(--eye-1)" />
+                        <stop offset="80%" stop-color="var(--eye-2)" />
+                        <stop offset="100%" stop-color="#000" />
+                    </radialGradient>
+                </defs>
 
-        <div id="beat-indicator">
-            <div id="beat-pulse" class="pulse-active"></div>
+                <!-- Cabelo de Fundo (Camada Traseira) -->
+                <path d="M120 280 Q80 400 130 550 M280 280 Q320 400 270 550" stroke="var(--hair-2)" stroke-width="30" fill="none" stroke-linecap="round" class="hair-strand" />
+
+                <!-- Braços (Pele com Sombra) -->
+                <rect x="130" y="380" width="18" height="100" rx="9" fill="var(--skin-2)" transform="rotate(15 130 380)" />
+                <rect x="252" y="380" width="18" height="100" rx="9" fill="var(--skin-2)" transform="rotate(-15 270 380)" />
+                <rect x="132" y="380" width="14" height="95" rx="7" fill="var(--skin-1)" transform="rotate(15 132 380)" />
+                <rect x="254" y="380" width="14" height="95" rx="7" fill="var(--skin-1)" transform="rotate(-15 268 380)" />
+
+                <!-- Corpo / Vestido Detalhado -->
+                <path d="M165 370 L235 370 L290 580 L110 580 Z" fill="var(--dress-1)" />
+                <path d="M165 370 L235 370 L250 450 L150 450 Z" fill="var(--dress-2)" opacity="0.6" />
+                <path d="M110 580 Q200 550 290 580" fill="none" stroke="#0a3d13" stroke-width="5" />
+
+                <!-- Cabeça -->
+                <path d="M150 250 Q150 370 200 370 Q250 370 250 250 Z" fill="var(--skin-2)" />
+                <path d="M155 245 Q155 355 200 355 Q245 355 245 245 Z" fill="var(--skin-1)" />
+
+                <!-- Olhos Ultra Detalhados -->
+                <g class="eyelid">
+                    <!-- Esquerdo -->
+                    <ellipse cx="178" cy="290" rx="14" ry="20" fill="#000" />
+                    <ellipse cx="178" cy="292" rx="10" ry="16" fill="url(#eyeIris)" />
+                    <circle cx="174" cy="282" r="4" fill="#fff" opacity="0.8" />
+                    <!-- Direito -->
+                    <ellipse cx="222" cy="290" rx="14" ry="20" fill="#000" />
+                    <ellipse cx="222" cy="292" rx="10" ry="16" fill="url(#eyeIris)" />
+                    <circle cx="218" cy="282" r="4" fill="#fff" opacity="0.8" />
+                </g>
+                
+                <!-- Cabelo Frontal (Camadas e Mechas) -->
+                <g class="hair-strand">
+                    <path d="M140 250 Q140 130 200 130 Q260 130 260 250" fill="url(#hairGrad)" />
+                    <!-- Franja Estilo Anime -->
+                    <path d="M140 230 L160 290 L180 230 L200 300 L220 230 L245 285 L260 220" fill="url(#hairGrad)" stroke="var(--hair-2)" stroke-width="1" />
+                    <!-- Mechas Laterais -->
+                    <path d="M145 230 C120 300 120 400 140 450" fill="none" stroke="url(#hairGrad)" stroke-width="12" stroke-linecap="round" />
+                    <path d="M255 230 C280 300 280 400 260 450" fill="none" stroke="url(#hairGrad)" stroke-width="12" stroke-linecap="round" />
+                </g>
+
+                <!-- Detalhes de Rosto -->
+                <path d="M190 340 Q200 355 210 340" fill="none" stroke="#e57373" stroke-width="2" stroke-linecap="round" /> <!-- Boca -->
+                <circle cx="165" cy="320" r="10" fill="#ff8a80" opacity="0.2" filter="url(#softGlow)" /> <!-- Blush -->
+                <circle cx="235" cy="320" r="10" fill="#ff8a80" opacity="0.2" filter="url(#softGlow)" />
+            </svg>
         </div>
 
-        <div class="instructions">Use ARROW KEYS to Dance to the Beat!</div>
+        <div class="controls">SETAS DO TECLADO PARA DANÇAR</div>
     </div>
 
     <script>
         let score = 0;
-        const scoreEl = document.getElementById('score');
-        const character = document.getElementById('character');
-        const comboText = document.getElementById('combo-text');
-        const pulse = document.getElementById('beat-pulse');
+        const scoreEl = document.getElementById('score-val');
+        const char = document.getElementById('character-wrapper');
+        const combo = document.getElementById('combo');
 
-        // Logic to track the "Perfect" window
-        // The pulse animation is 1s long. We consider "Perfect" to be near the peak (0.5s)
-        function getPulseScale() {
-            const style = window.getComputedStyle(pulse);
-            const matrix = new WebKitCSSMatrix(style.transform);
-            return matrix.a; // Returns the scale value
-        }
+        const moves = {
+            'ArrowLeft': 'pose-left',
+            'ArrowRight': 'pose-right',
+            'ArrowUp': 'pose-up',
+            'ArrowDown': 'pose-down'
+        };
 
-        window.addEventListener('keydown', (e) => {
-            let poseClass = '';
-            
-            switch(e.key) {
-                case 'ArrowLeft': poseClass = 'pose-left'; break;
-                case 'ArrowRight': poseClass = 'pose-right'; break;
-                case 'ArrowUp': poseClass = 'pose-up'; break;
-                case 'ArrowDown': poseClass = 'pose-down'; break;
-                default: return;
+        document.addEventListener('keydown', (e) => {
+            const move = moves[e.key];
+            if (move) {
+                // Remove classes anteriores
+                char.classList.remove('pose-left', 'pose-right', 'pose-up', 'pose-down');
+                void char.offsetWidth; // Trigger reflow
+                
+                // Aplica nova pose
+                char.classList.add(move);
+                
+                // Feedback visual
+                score += 150;
+                scoreEl.innerText = score;
+                showCombo();
+                createParticle();
+
+                // Som de "batida" (Opcional - Web Audio API)
+                playHitSound();
+
+                // Volta ao estado original
+                setTimeout(() => {
+                    char.classList.remove(move);
+                }, 250);
             }
-
-            // Visual feedback for dance
-            character.classList.remove('pose-left', 'pose-right', 'pose-up', 'pose-down');
-            void character.offsetWidth; // Trigger reflow
-            character.classList.add(poseClass);
-
-            // Scoring Logic
-            const scale = getPulseScale();
-            // Scale peaks around 1.2. We reward hits between 1.0 and 1.2
-            if (scale > 0.9) {
-                score += 100;
-                showCombo("PERFECT!");
-            } else {
-                score += 10;
-            }
-            
-            scoreEl.innerText = score;
-
-            // Reset pose after a short delay
-            setTimeout(() => {
-                character.classList.remove(poseClass);
-            }, 150);
         });
 
-        function showCombo(text) {
-            comboText.innerText = text;
-            comboText.classList.remove('animate-combo');
-            void comboText.offsetWidth;
-            comboText.classList.add('animate-combo');
+        function showCombo() {
+            combo.classList.remove('animate-pop');
+            void combo.offsetWidth;
+            combo.classList.add('animate-pop');
         }
 
-        // Optional: Simple synthesizer sound on beat (click browser to enable audio context)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playBeatSound() {
-            if (audioCtx.state === 'suspended') return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
+        function createParticle() {
+            const p = document.createElement('div');
+            p.style.position = 'absolute';
+            p.style.width = '10px';
+            p.style.height = '10px';
+            p.style.background = 'var(--eye-1)';
+            p.style.borderRadius = '50%';
+            p.style.left = '50%';
+            p.style.top = '50%';
+            p.style.boxShadow = '0 0 10px var(--eye-1)';
+            p.style.pointerEvents = 'none';
+            document.body.appendChild(p);
+
+            const destinationX = (Math.random() - 0.5) * 500;
+            const destinationY = (Math.random() - 0.5) * 500;
+
+            p.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${destinationX}px, ${destinationY}px) scale(0)`, opacity: 0 }
+            ], { duration: 1000, easing: 'ease-out' }).onfinish = () => p.remove();
+        }
+
+        function playHitSound() {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.frequency.value = 150;
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            gain.connect(ctx.destination);
+            osc.frequency.setValueAtTime(120, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.1);
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.1);
+            osc.stop(ctx.currentTime + 0.1);
         }
-
-        // Sync sound with animation loop roughly
-        setInterval(() => {
-            // playBeatSound(); // Uncomment this line if you want a kick-drum sound (requires user interaction first)
-        }, 1000);
-
-        // Resume audio context on first click
-        document.body.addEventListener('click', () => {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-        });
-
     </script>
 </body>
 </html>
