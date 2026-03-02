@@ -1,1 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Táctica Avançada: O Retorno de Harry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        body {
+            background-color: #020617;
+            color: #f1f5f9;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .bg-cyber {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 500px;
+        }
+        .neon-glow-red { box-shadow: 0 0 20px rgba(225, 29, 72, 0.4); border: 1px solid #e11d48; }
+        .neon-glow-purple { box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); border: 1px solid #a855f7; }
+        .neon-glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.4); border: 1px solid #06b6d4; }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10 bg-cyber">
 
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-16 border-b border-slate-700 pb-8 relative">
+            <div class="absolute -top-4 -left-4 w-24 h-24 bg-red-600 opacity-20 blur-3xl"></div>
+            <h1 class="text-5xl md:text-7xl font-black mb-4 italic tracking-tighter">SHINJUKU: <span class="text-red-500">MOU II!</span></h1>
+            <p class="text-xl text-slate-400 font-light">Análise balística do contra-ataque de Harry e o colapso das realidades infinitas.</p>
+        </header>
+
+        <section class="mb-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6 text-cyan-400">1. O Impacto de Queda: Kokusen Vertical</h2>
+                    <p class="text-slate-300 leading-relaxed mb-6">
+                        Ao romper a barreira de Kirky por fora com um **Kokusen Fluido**, Harry utilizou a energia potencial da queda livre para amplificar o seu soco. O impacto na cabeça de Sukuna não foi apenas físico; a propriedade fluida da sua energia permitiu que o Kokusen ignorasse a resistência externa da pele amaldiçoada, focando 100% do impacto no sistema nervoso central do alvo.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg border-l-4 border-cyan-500">
+                            <span>Velocidade de Impacto</span>
+                            <span class="font-mono text-cyan-400">Mach 1.2 (Gravidade Amaldiçoada)</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg border-l-4 border-red-500">
+                            <span>Multiplicador de Kokusen</span>
+                            <span class="font-mono text-red-400">Potência Elevada a 2.5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-6 bg-slate-900/40 rounded-2xl neon-glow-cyan">
+                    <h3 class="text-center mb-4 font-bold">Distribuição de Força no Impacto "Caindo de Cabeça"</h3>
+                    <div class="chart-container">
+                        <canvas id="impactPhysicsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <div class="mb-10 text-center">
+                <h2 class="text-4xl font-extrabold text-purple-400">2. Decomposição da Árvore da Vida</h2>
+                <p class="text-slate-400 mt-2">Após salvar Fuyuko, Harry sacrificou a sua reserva estratégica para libertar um arsenal múltiplo.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="p-6 bg-slate-900/80 rounded-xl border border-slate-700 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-2 opacity-10 text-6xl">🩸</div>
+                    <h4 class="text-red-500 font-bold text-xl mb-3">Manipulação de Sangue</h4>
+                    <p class="text-sm text-slate-400">Uso do "Sangen" (Piercing Blood) disparado de distâncias extremas, perfurando a floresta em velocidade superluminal.</p>
+                    <div class="mt-4 h-1 w-full bg-red-900 rounded"><div class="h-full bg-red-500 w-full animate-pulse"></div></div>
+                </div>
+                <div class="p-6 bg-slate-900/80 rounded-xl border border-slate-700 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-2 opacity-10 text-6xl">👁️</div>
+                    <h4 class="text-cyan-500 font-bold text-xl mb-3">Os Doze Olhos</h4>
+                    <p class="text-sm text-slate-400">Análise de realidade e previsão de linhas temporais, permitindo a coordenação com a Fuyuko.</p>
+                    <div class="mt-4 h-1 w-full bg-cyan-900 rounded"><div class="h-full bg-cyan-500 w-3/4"></div></div>
+                </div>
+                <div class="p-6 bg-slate-900/80 rounded-xl border border-slate-700 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-2 opacity-10 text-6xl">💍</div>
+                    <h4 class="text-purple-500 font-bold text-xl mb-3">Anel de Rika</h4>
+                    <p class="text-sm text-slate-400">Invocação parcial de armazenamento de energia amaldiçoada e ferramentas externas.</p>
+                    <div class="mt-4 h-1 w-full bg-purple-900 rounded"><div class="h-full bg-purple-500 w-1/2"></div></div>
+                </div>
+            </div>
+
+            <div class="glass-card p-8 bg-slate-900/40 rounded-2xl neon-glow-purple">
+                <h3 class="text-center text-xl font-bold mb-6">Frequência de Ataques Superluminais (Piercing Blood x5)</h3>
+                <div class="chart-container" id="speedAtaquePlot"></div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="p-8 bg-black/40 rounded-3xl border-2 border-dashed border-pink-500/50">
+                    <h2 class="text-3xl font-black text-pink-500 mb-6 italic">DOMÍNIO: PÔR DO SOL ROMÂNTICO</h2>
+                    <p class="text-slate-300 mb-6">
+                        A Expansão de Domínio de Fuyuko, **"Mugen no Genjitsu no Aida no Romanchikku na Yūhi"**, materializa a ideia de infinitas realidades. O alvo é forçado a processar o seu próprio movimento em biliões de linhas temporais simultâneas. 
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-pink-500 text-black font-bold p-1 px-3 rounded">EFEITO 1</div>
+                            <p class="text-sm">Desnorteamento Cognitivo: O cérebro do alvo tenta controlar corpos que não existem na realidade base.</p>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="bg-pink-500 text-black font-bold p-1 px-3 rounded">EFEITO 2</div>
+                            <p class="text-sm">Paralisia de Locomoção: Cada passo requer o cálculo de infinitos pontos de apoio.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-2xl font-bold mb-4 text-emerald-400">Eficiência de Harry: Energia Fluida</h3>
+                    <p class="text-slate-400 mb-6">A energia de Harry flui sem atrito, permitindo-lhe realizar o Kokusen com 42% mais facilidade que um feiticeiro comum sob stress extremo.</p>
+                    <div class="chart-container">
+                        <canvas id="fluidezChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center py-10 border-t border-slate-800">
+            <p class="text-slate-500 text-sm uppercase tracking-widest">Relatório Final - Incidente Shinjuku - Protocolo de Batalha: Harry & Fuyuko</p>
+        </footer>
+    </div>
+
+    <script>
+        const wrapLabel = (label) => {
+            if (label.length <= 16) return label;
+            const words = label.split(' ');
+            let lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + word).length > 16) {
+                    if (currentLine) lines.push(currentLine.trim());
+                    currentLine = word + ' ';
+                } else {
+                    currentLine += word + ' ';
+                }
+            });
+            if (currentLine) lines.push(currentLine.trim());
+            return lines;
+        };
+
+        const ttConfig = {
+            callbacks: {
+                title: function(items) {
+                    let label = items[0].chart.data.labels[items[0].dataIndex];
+                    return Array.isArray(label) ? label.join(' ') : label;
+                }
+            }
+        };
+
+        const ctxImpact = document.getElementById('impactPhysicsChart').getContext('2d');
+        new Chart(ctxImpact, {
+            type: 'polarArea',
+            data: {
+                labels: [wrapLabel("Impacto do Soco"), wrapLabel("Energia da Queda"), wrapLabel("Amplificação Kokusen"), wrapLabel("Propriedade Fluida")],
+                datasets: [{
+                    data: [100, 150, 300, 200],
+                    backgroundColor: ['rgba(6, 182, 212, 0.5)', 'rgba(59, 130, 246, 0.5)', 'rgba(225, 29, 72, 0.5)', 'rgba(168, 85, 247, 0.5)'],
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#94a3b8' } },
+                    tooltip: ttConfig
+                },
+                scales: { r: { ticks: { display: false }, grid: { color: '#334155' } } }
+            }
+        });
+
+        const trace1 = {
+            x: [0.1, 0.12, 0.14, 0.16, 0.18],
+            y: [10, 10, 10, 10, 10],
+            name: 'Piercing Blood (Luz)',
+            mode: 'markers',
+            marker: { color: '#e11d48', size: 15, symbol: 'star' }
+        };
+        const trace2 = {
+            x: [0.25],
+            y: [8],
+            name: 'Karihara (Velocidade Luz)',
+            mode: 'markers',
+            marker: { color: '#a855f7', size: 20, symbol: 'diamond' }
+        };
+        
+        Plotly.newPlot('speedAtaquePlot', [trace1, trace2], {
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            xaxis: { title: 'Tempo (Nanosegundos)', color: '#94a3b8', gridcolor: '#334155' },
+            yaxis: { title: 'Intensidade de CE', color: '#94a3b8', gridcolor: '#334155' },
+            margin: { t: 20, b: 40, l: 50, r: 20 },
+            showlegend: true,
+            legend: { font: { color: '#94a3b8' } }
+        }, {responsive: true});
+
+        const ctxFluidez = document.getElementById('fluidezChart').getContext('2d');
+        new Chart(ctxFluidez, {
+            type: 'radar',
+            data: {
+                labels: [wrapLabel("Facilidade Kokusen"), wrapLabel("Consumo RCT"), wrapLabel("Velocidade Reacção"), wrapLabel("Stamina")],
+                datasets: [{
+                    label: 'Harry (Energia Fluida)',
+                    data: [95, 20, 90, 85],
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)'
+                }, {
+                    label: 'Feiticeiro Standard',
+                    data: [40, 70, 60, 50],
+                    borderColor: '#64748b',
+                    backgroundColor: 'rgba(100, 116, 139, 0.2)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#334155' },
+                        grid: { color: '#334155' },
+                        pointLabels: { color: '#94a3b8' },
+                        ticks: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: '#94a3b8' } },
+                    tooltip: ttConfig
+                }
+            }
+        });
+    </script>
+</body>
+</html>
